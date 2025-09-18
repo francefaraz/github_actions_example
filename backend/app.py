@@ -12,7 +12,7 @@ app.config['PORT'] = int(os.environ.get('PORT', 5000))
 @app.route('/')
 def home():
     return jsonify({
-        'message': 'Welcome to the Backend API BY Munexa Far',
+        'message': 'Welcome to the Backend API BY Munexa Studio (MuneerFaraz)',
         'status': 'running',
         'version': '1.0.0'
     })
@@ -32,6 +32,13 @@ def get_data():
             {'id': 2, 'name': 'Item 2', 'value': 200},
             {'id': 3, 'name': 'Item 3', 'value': 300}
         ]
+    })
+@app.route('/aboutme')
+def about():
+    return jsonify({
+        'message': 'About page',
+        'status': 'running',
+        'version': '1.0.0'
     })
 
 @app.route('/api/data', methods=['POST'])
