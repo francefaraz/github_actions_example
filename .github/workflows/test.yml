@@ -1,0 +1,20 @@
+# just add on master just do echo everything finge 
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: health-check
+        run: echo "Health check"
+      - name: build-deploy
+        run: echo "Build and deploy"
+      - name: test
+        run: echo "Test"
+      - name: deploy
+        run: echo "Deploy"
+      - name: cleanup
+        run: echo "Cleanup"
