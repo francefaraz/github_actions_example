@@ -50,7 +50,7 @@ jobs:
       # 6. Docker Build + Push
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-flask-app:latest -f backend/Dockerfiie.backend .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-flask-app:latest -f backend/Dockerfile.backend .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-flask-app:latest
 
       # 7. Deploy to EC2
