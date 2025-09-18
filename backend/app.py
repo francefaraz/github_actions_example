@@ -12,7 +12,7 @@ app.config['PORT'] = int(os.environ.get('PORT', 5000))
 @app.route('/')
 def home():
     return jsonify({
-        'message': 'Welcome to the Backend API',
+        'message': 'Welcome to the Backend API BY Munexa Far',
         'status': 'running',
         'version': '1.0.0'
     })

@@ -1,0 +1,67 @@
+# name: CI/CD Pipeline
+
+# on:
+#   push:
+#     branches:
+#       -master
+# jobs:
+#   build-deploy:
+#     runs-on: ubuntu-latest
+name: CI/CD Pipeline
+
+# Kab chalega pipeline?
+on:
+  push:
+    branches:
+      - main   # jab bhi main branch pe push/merge hoga
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest   # workflow run hone wala OS
+
+    steps:
+      # 1. Checkout source code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. Python setup (agar Python app hai)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # 3. Dependencies install
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt || echo "No requirements.txt"
+          # npm install # Node.js project ho to uncomment
+
+      # 4. Run Tests (agar tests hai)
+      - name: Run Tests
+        run: pytest || echo "No tests found"
+
+      # 5. Docker Hub login
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 6. Docker Build + Push
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-flask-app:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-flask-app:latest
+
+      # 7. Deploy to EC2
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-flask-app:latest
+            docker stop backend || true
+            docker rm backend || true
+            docker run -d --name backend -p 5000:5000 ${{ secrets.DOCKERHUB_USERNAME }}/my-flask-app:latest

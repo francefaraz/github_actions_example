@@ -212,6 +212,28 @@ docker inspect <container_id>
 docker stats <container_id>
 ```
 
+### Tagging strategy: single vs multiple tags
+
+```bash
+# Single tag (enough if you only need one immutable version)
+docker build -t $APP_BACK:$BACK_TAG -f backend/Dockerfile.backend .
+docker push $APP_BACK:$BACK_TAG
+
+# Multiple tags (common practice: versioned + latest pointing to same image)
+docker build -t $APP_BACK:$BACK_TAG -t $APP_BACK:latest -f backend/Dockerfile.backend .
+docker push $APP_BACK:$BACK_TAG
+docker push $APP_BACK:latest
+
+# Equivalent two-step for latest
+docker tag $APP_BACK:$BACK_TAG $APP_BACK:latest
+```
+
+Notes:
+- Use a colon for tags, not a slash.
+  - Correct: `myuser/my-flask-app:v1`
+  - Wrong: `myuser/my-flask-app/v1`
+- Why two tags? `v1` (immutable for releases/rollbacks) and `latest` (moving pointer for consumers who want the current version).
+
 ---
 
 ## Common Interview Questions
