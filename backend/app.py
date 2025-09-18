@@ -8,7 +8,7 @@ CORS(app)
 # Configuration
 app.config['DEBUG'] = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
 app.config['PORT'] = int(os.environ.get('PORT', 5000))
-
+app_datas={}
 @app.route('/')
 def home():
     return jsonify({
@@ -26,12 +26,14 @@ def health_check():
 
 @app.route('/api/data')
 def get_data():
+    sample_data=[
+        {'id': 1, 'name': 'Item 1', 'value': 100},
+        {'id': 2, 'name': 'Item 2', 'value': 200},
+        {'id': 3, 'name': 'Item 3', 'value': 300}
+    ]
+    sample_data.append(app_datas)
     return jsonify({
-        'data': [
-            {'id': 1, 'name': 'Item 1', 'value': 100},
-            {'id': 2, 'name': 'Item 2', 'value': 200},
-            {'id': 3, 'name': 'Item 3', 'value': 300}
-        ]
+        'data': sample_data
     })
 @app.route('/aboutme')
 def about():
@@ -53,7 +55,7 @@ def create_data():
         'name': data.get('name', 'New Item'),
         'value': data.get('value', 0)
     }
-    
+    app_datas.update(new_item)
     return jsonify({
         'message': 'Data created successfully',
         'item': new_item
