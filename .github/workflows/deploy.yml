@@ -13,7 +13,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main   # jab bhi main branch pe push/merge hoga
+      - master   # jab bhi main branch pe push/merge hoga
 
 jobs:
   build-deploy:
